@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "chip8.h"
 #include "fonts.h"
@@ -21,10 +23,15 @@ void chip8_init(struct Chip8 *chip)
     memset(&chip->keypad, 0, sizeof(chip->keypad));
     memset(&chip->video, 0, sizeof(chip->video));
 
-    //loading fonts into memory
-    for(unsigned int i =0; i<FONTSET_SIZE; i++){
-      chip->memory[FONTSET_START_ADDRESS+i] = fontset[i];
+    // loading fonts into memory
+    for (unsigned int i = 0; i < FONTSET_SIZE; i++)
+    {
+        chip->memory[FONTSET_START_ADDRESS + i] = fontset[i];
     }
+
+    // setting seed for rand()
+    // !use %255 to contain it into a byte
+    srand(time(NULL));
 }
 
 void chip8_load_rom(struct Chip8 *chip, const char *filename)

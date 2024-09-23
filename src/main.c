@@ -18,7 +18,8 @@ int main(int argc, char **argv)
         if (!curr_byte)
             break;
         printf("%x ", curr_byte);
-        if((i+1)%4 ==0 ) printf("\n");
+        if ((i + 1) % 4 == 0)
+            printf("\n");
     }
     printf("\n");
     return 0;
