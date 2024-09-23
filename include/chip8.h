@@ -1,5 +1,5 @@
-#ifndef CHIP_8
-#define CHIP_8
+#ifndef CHIP8_H
+#define CHIP8_H
 
 #include <stdint.h>
 
@@ -21,4 +21,4 @@ struct Chip8
 void chip8_init(struct Chip8 *chip);
 void chip8_load_rom(struct Chip8 *chip, const char *filename);
 
-#endif /*CHIP_8*/
+#endif /*CHIP8_H*/

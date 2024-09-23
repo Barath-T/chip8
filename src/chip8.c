@@ -3,8 +3,10 @@
 #include <string.h>
 
 #include "chip8.h"
+#include "fonts.h"
 
 const unsigned int START_ADDRESS = 0x200;
+const unsigned int FONTSET_START_ADDRESS = 0x50;
 
 void chip8_init(struct Chip8 *chip)
 {
@@ -18,6 +20,11 @@ void chip8_init(struct Chip8 *chip)
     chip->sound_timer = 0;
     memset(&chip->keypad, 0, sizeof(chip->keypad));
     memset(&chip->video, 0, sizeof(chip->video));
+
+    //loading fonts into memory
+    for(unsigned int i =0; i<FONTSET_SIZE; i++){
+      chip->memory[FONTSET_START_ADDRESS+i] = fontset[i];
+    }
 }
 
 void chip8_load_rom(struct Chip8 *chip, const char *filename)

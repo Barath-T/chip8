@@ -17,7 +17,8 @@ int main(int argc, char **argv)
         char curr_byte = first.memory[0x200 + i];
         if (!curr_byte)
             break;
-        printf("%x ", smth);
+        printf("%x ", curr_byte);
+        if((i+1)%4 ==0 ) printf("\n");
     }
     printf("\n");
     return 0;
