@@ -19,5 +19,7 @@ $(BIN): $(OBJS)
 $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c -I $(INC) $< -o $@
 
+format:
+	clang-format -i src/* include/*
 clean:
 	$(RM) -r $(BINDIR)/* $(OBJ)/*
