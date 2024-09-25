@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 
 #include "chip8.h"
 
@@ -193,4 +194,32 @@ void OP_9xy0(struct Chip8 *chip)
     {
         chip->pc += 2;
     }
+}
+
+// Annn: LD I, addr
+// set I = addr
+void OP_Annn(struct Chip8 *chip)
+{
+    uint16_t address = chip->opcode & 0x0FFFu;
+
+    chip->index = address;
+}
+
+// Bnnn: JP V0, addr
+// Jump to loccation nnn + V0
+void OP_Bnnn(struct Chip8 *chip)
+{
+    uint16_t address = chip->opcode & 0x0FFFu;
+
+    chip->pc = address + chip->registers[0];
+}
+
+// Cxkk: RND Vx, byte
+// set Vx = random byte AND kk
+void OP_Cxkk(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+    uint8_t byte = chip->opcode & 0x00FFu;
+
+    chip->registers[Vx] = (rand() % 255) & byte;
 }
