@@ -261,3 +261,82 @@ void OP_Dxyn(struct Chip8 *chip)
         }
     }
 }
+
+// Ex9E: SKP Vx
+// skip next instruction if key with the value of Vx is pressed
+void OP_Ex9E(struct Chip8* chip){
+  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+  uint8_t key = chip->registers[Vx];
+
+  if(chip->keypad[key]){
+    chip->pc += 2;
+  }
+}
+
+// ExA1: SKNP Vx
+// skip next instruction if key with the value of Vx is not pressed
+void OP_ExA1(struct Chip8* chip){
+  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+  uint8_t key = chip->registers[Vx];
+
+  if(!chip->keypad[key]){
+    chip->pc += 2;
+  }
+}
+
+
+// Fx07: LD Vx, DT
+// set Vx = delay timer value
+void OP_Fx07(struct Chip8* chip){
+  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+
+  chip->registers[Vx] = chip->delay_timer;
+}
+
+// Fx0A: LD Vx, K
+// wait for a keypress, store the value of the key in Vx
+void OP_Fx0A(struct Chip8* chip){
+  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+
+  for(uint8_t i = 0; i<16; i++){
+    if(chip->keypad[i]){
+      chip->registers[i] = i;
+      return;
+    }
+  }
+  chip->pc -= 2;
+}
+
+// Fx15: LD DT, Vx
+// set delay timer = Vx
+void OP_Fx15(struct Chip8* chip){
+  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+
+  chip->delay_timer = chip->registers[Vx];
+}
+
+// Fx18: LD ST, Vx
+// set sound timer = Vx
+void OP_Fx18(struct Chip8* chip){
+  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+
+  chip->sound_timer = chip->registers[Vx];
+}
+
+// Fx1E: ADD I, Vx
+// set I = I + Vx
+void OP_Fx18(struct Chip8* chip){
+  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+
+  chip->index += chip->registers[Vx];
+}
+
+// Fx29: LD F, Vx
+// set I = location of sprite for digit Vx
+void OP_Fx29(struct Chip8* chip){
+  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+  uint8_t digit = chip->registers[Vx];
+
+  chip->index = FONTSET_START_ADDRESS + (5*digit);
+}
+
