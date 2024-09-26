@@ -2,6 +2,8 @@
 #define CHIP8_H
 
 #include <stdint.h>
+static const uint8_t VIDEO_WIDTH = 64;
+static const uint8_t VIDEO_HEIGHT = 32;
 
 struct Chip8
 {

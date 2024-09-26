@@ -1,5 +1,5 @@
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "chip8.h"
 
@@ -222,4 +222,42 @@ void OP_Cxkk(struct Chip8 *chip)
     uint8_t byte = chip->opcode & 0x00FFu;
 
     chip->registers[Vx] = (rand() % 255) & byte;
+}
+
+// Dxyn: DRW Vx, Vy, nibble (height)
+// display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision
+void OP_Dxyn(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+    uint8_t Vy = (chip->opcode & 0x00F0u) >> 4u;
+    uint8_t height = chip->opcode & 0x000F;
+
+    uint8_t x_pos = chip->registers[Vx] % VIDEO_WIDTH;
+    uint8_t y_pos = chip->registers[Vy] % VIDEO_HEIGHT;
+
+    chip->registers[0xF] = 0;
+
+    // iterating each byte/ row of sprite
+    for (uint8_t row = 0; row < height; row++)
+    {
+        uint8_t sprite_byte = chip->memory[chip->index + row];
+
+        // iterating each bit/ col of a sprite byte/ row
+        for (uint8_t col = 0; col < 8; col++)
+        {
+            uint8_t sprite_pixel = sprite_byte & (0x80 >> col);
+            uint32_t *video_pixel = &chip->video[((y_pos + row) * VIDEO_WIDTH) + (x_pos + col)];
+
+            if (sprite_pixel)
+            {
+                // collision
+                if (*video_pixel == 0xFFFFFFFF)
+                {
+                    chip->registers[0xF] = 1;
+                }
+                // XORing
+                *video_pixel ^= 0xFFFFFFFF;
+            }
+        }
+    }
 }
