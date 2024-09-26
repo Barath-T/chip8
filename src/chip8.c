@@ -7,9 +7,6 @@
 #include "chip8.h"
 #include "fonts.h"
 
-const unsigned int START_ADDRESS = 0x200;
-const unsigned int FONTSET_START_ADDRESS = 0x50;
-
 void chip8_init(struct Chip8 *chip)
 {
     memset(&chip->registers, 0, sizeof(chip->registers));

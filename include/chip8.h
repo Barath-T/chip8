@@ -2,6 +2,11 @@
 #define CHIP8_H
 
 #include <stdint.h>
+static const unsigned int START_ADDRESS = 0x200;
+static const unsigned int FONTSET_START_ADDRESS = 0x50;
+
+static const uint8_t VIDEO_WIDTH = 64;
+static const uint8_t VIDEO_HEIGHT = 32;
 
 struct Chip8
 {
