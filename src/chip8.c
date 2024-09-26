@@ -7,7 +7,6 @@
 #include "chip8.h"
 #include "fonts.h"
 
-
 void chip8_init(struct Chip8 *chip)
 {
     memset(&chip->registers, 0, sizeof(chip->registers));

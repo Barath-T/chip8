@@ -264,79 +264,132 @@ void OP_Dxyn(struct Chip8 *chip)
 
 // Ex9E: SKP Vx
 // skip next instruction if key with the value of Vx is pressed
-void OP_Ex9E(struct Chip8* chip){
-  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
-  uint8_t key = chip->registers[Vx];
+void OP_Ex9E(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+    uint8_t key = chip->registers[Vx];
 
-  if(chip->keypad[key]){
-    chip->pc += 2;
-  }
+    if (chip->keypad[key])
+    {
+        chip->pc += 2;
+    }
 }
 
 // ExA1: SKNP Vx
 // skip next instruction if key with the value of Vx is not pressed
-void OP_ExA1(struct Chip8* chip){
-  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
-  uint8_t key = chip->registers[Vx];
+void OP_ExA1(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+    uint8_t key = chip->registers[Vx];
 
-  if(!chip->keypad[key]){
-    chip->pc += 2;
-  }
+    if (!chip->keypad[key])
+    {
+        chip->pc += 2;
+    }
 }
-
 
 // Fx07: LD Vx, DT
 // set Vx = delay timer value
-void OP_Fx07(struct Chip8* chip){
-  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+void OP_Fx07(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
 
-  chip->registers[Vx] = chip->delay_timer;
+    chip->registers[Vx] = chip->delay_timer;
 }
 
 // Fx0A: LD Vx, K
 // wait for a keypress, store the value of the key in Vx
-void OP_Fx0A(struct Chip8* chip){
-  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+void OP_Fx0A(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
 
-  for(uint8_t i = 0; i<16; i++){
-    if(chip->keypad[i]){
-      chip->registers[i] = i;
-      return;
+    for (uint8_t i = 0; i < 16; i++)
+    {
+        if (chip->keypad[i])
+        {
+            chip->registers[Vx] = i;
+            return;
+        }
     }
-  }
-  chip->pc -= 2;
+    chip->pc -= 2;
 }
 
 // Fx15: LD DT, Vx
 // set delay timer = Vx
-void OP_Fx15(struct Chip8* chip){
-  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+void OP_Fx15(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
 
-  chip->delay_timer = chip->registers[Vx];
+    chip->delay_timer = chip->registers[Vx];
 }
 
 // Fx18: LD ST, Vx
 // set sound timer = Vx
-void OP_Fx18(struct Chip8* chip){
-  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+void OP_Fx18(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
 
-  chip->sound_timer = chip->registers[Vx];
+    chip->sound_timer = chip->registers[Vx];
 }
 
 // Fx1E: ADD I, Vx
 // set I = I + Vx
-void OP_Fx18(struct Chip8* chip){
-  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+void OP_Fx1E(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
 
-  chip->index += chip->registers[Vx];
+    chip->index += chip->registers[Vx];
 }
 
 // Fx29: LD F, Vx
 // set I = location of sprite for digit Vx
-void OP_Fx29(struct Chip8* chip){
-  uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
-  uint8_t digit = chip->registers[Vx];
+void OP_Fx29(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+    uint8_t digit = chip->registers[Vx];
 
-  chip->index = FONTSET_START_ADDRESS + (5*digit);
+    chip->index = FONTSET_START_ADDRESS + (5 * digit);
 }
 
+// Fx33: LD B, Vx
+//  store BCD representation of Vx in memory locations I, I+1, I+2
+void OP_Fx33(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+    uint8_t value = chip->registers[Vx];
+
+    // ones place
+    chip->memory[chip->index + 2] = value % 10;
+    value /= 10;
+
+    // tens place
+    chip->memory[chip->index + 1] = value % 10;
+    value /= 10;
+
+    // hundreds place
+    chip->memory[chip->index] = value % 10;
+}
+
+// Fx55: LD [I], Vx
+// store registers V0 to Vx in memory starting at location I
+void OP_Fx55(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+
+    for (uint8_t i = 0; i < Vx; i++)
+    {
+        chip->memory[chip->index + i] = chip->registers[i];
+    }
+}
+
+// Fx65: LD Vx, [I]
+// read registers V0 to Vx from memory starting at location I
+void OP_Fx65(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+
+    for (uint8_t i = 0; i < Vx; i++)
+    {
+        chip->registers[i] = chip->memory[chip->index + i];
+    }
+}
