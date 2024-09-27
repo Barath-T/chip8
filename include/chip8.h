@@ -26,4 +26,40 @@ struct Chip8
 void chip8_init(struct Chip8 *chip);
 void chip8_load_rom(struct Chip8 *chip, const char *filename);
 
+void OP_NULL(struct Chip8 *chip);
+void OP_00E0(struct Chip8 *chip);
+void OP_00EE(struct Chip8 *chip);
+void OP_1nnn(struct Chip8 *chip);
+void OP_2nnn(struct Chip8 *chip);
+void OP_3xkk(struct Chip8 *chip);
+void OP_4xkk(struct Chip8 *chip);
+void OP_5xy0(struct Chip8 *chip);
+void OP_6xkk(struct Chip8 *chip);
+void OP_7xkk(struct Chip8 *chip);
+void OP_8xy0(struct Chip8 *chip);
+void OP_8xy1(struct Chip8 *chip);
+void OP_8xy2(struct Chip8 *chip);
+void OP_8xy3(struct Chip8 *chip);
+void OP_8xy4(struct Chip8 *chip);
+void OP_8xy5(struct Chip8 *chip);
+void OP_8xy6(struct Chip8 *chip);
+void OP_8xy7(struct Chip8 *chip);
+void OP_8xyE(struct Chip8 *chip);
+void OP_9xy0(struct Chip8 *chip);
+void OP_Annn(struct Chip8 *chip);
+void OP_Bnnn(struct Chip8 *chip);
+void OP_Cxkk(struct Chip8 *chip);
+void OP_Dxyn(struct Chip8 *chip);
+void OP_Ex9E(struct Chip8 *chip);
+void OP_ExA1(struct Chip8 *chip);
+void OP_Fx07(struct Chip8 *chip);
+void OP_Fx0A(struct Chip8 *chip);
+void OP_Fx15(struct Chip8 *chip);
+void OP_Fx18(struct Chip8 *chip);
+void OP_Fx1E(struct Chip8 *chip);
+void OP_Fx29(struct Chip8 *chip);
+void OP_Fx33(struct Chip8 *chip);
+void OP_Fx55(struct Chip8 *chip);
+void OP_Fx65(struct Chip8 *chip);
+
 #endif /*CHIP8_H*/
