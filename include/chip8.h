@@ -34,6 +34,7 @@ struct Chip8
 
 void chip8_init(struct Chip8 *chip);
 void chip8_load_rom(struct Chip8 *chip, const char *filename);
+void chip8_cycle(struct Chip8 *chip);
 
 void OP_NULL(struct Chip8 *chip);
 void OP_00E0(struct Chip8 *chip);

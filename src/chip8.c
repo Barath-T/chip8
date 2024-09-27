@@ -125,6 +125,27 @@ void chip8_load_rom(struct Chip8 *chip, const char *filename)
     fclose(rom);
 }
 
+void chip8_cycle(struct Chip8 *chip)
+{
+
+    // fetch
+    uint16_t instruction = (chip->memory[chip->pc] << 8u) | chip->memory[chip->pc + 1];
+
+    // move pc to next instruction
+    chip->pc += 2;
+
+    // execute
+    (*chip->table[(instruction & 0xF000u) >> 12u])(chip);
+
+    // decrement delay timer if it has been set
+    if (chip->delay_timer > 0)
+        chip->delay_timer--;
+
+    // decrement sound timer if it has been set
+    if (chip->sound_timer > 0)
+        chip->sound_timer--;
+}
+
 void opcode_prefix0(struct Chip8 *chip)
 {
     (*chip->table0[chip->opcode & 0x000Fu])(chip);
