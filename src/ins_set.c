@@ -3,6 +3,11 @@
 
 #include "chip8.h"
 
+// do nothing when invalid opcode
+void OP_NULL(struct Chip8 *chip)
+{
+}
+
 // 00E0: CLS
 // clear the display
 void OP_00E0(struct Chip8 *chip)
@@ -26,6 +31,17 @@ void OP_1nnn(struct Chip8 *chip)
     chip->pc = address;
 }
 
+// 2nnn: CALL addr
+// call subroutine at nnn
+void OP_2nnn(struct Chip8 *chip)
+{
+    uint16_t address = chip->opcode & 0x0FFFu;
+
+    chip->stack[chip->sp] = chip->pc;
+    chip->sp++;
+    chip->pc = address;
+}
+
 // 3xkk: SE Vx, byte
 // skip next instruction if Vx = kk
 void OP_3xkk(struct Chip8 *chip)
@@ -39,6 +55,18 @@ void OP_3xkk(struct Chip8 *chip)
     }
 }
 
+// 4xkk: SNE Vx, byte
+// skip next instruction if Vx != kk
+void OP_4xkk(struct Chip8 *chip)
+{
+    uint8_t Vx = (chip->opcode & 0x0F00u) >> 8u;
+    uint8_t byte = (chip->opcode & 0x00FFu);
+
+    if (chip->registers[Vx] != byte)
+    {
+        chip->pc += 2;
+    }
+}
 // 5xy0: SE Vx, Vy
 // skip next instruction if Vx = Vy
 void OP_5xy0(struct Chip8 *chip)
