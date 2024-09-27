@@ -8,6 +8,9 @@ static const unsigned int FONTSET_START_ADDRESS = 0x50;
 static const uint8_t VIDEO_WIDTH = 64;
 static const uint8_t VIDEO_HEIGHT = 32;
 
+struct Chip8;
+typedef void (*chip8_ins)(struct Chip8 *);
+
 struct Chip8
 {
     uint8_t registers[16];
@@ -21,6 +24,12 @@ struct Chip8
     uint8_t keypad[16];
     uint32_t video[64 * 32];
     uint16_t opcode;
+
+    chip8_ins table[0xF + 1];
+    chip8_ins table0[0xE + 1];
+    chip8_ins table8[0xE + 1];
+    chip8_ins tableE[0xE + 1];
+    chip8_ins tableF[0x65 + 1];
 };
 
 void chip8_init(struct Chip8 *chip);
@@ -61,5 +70,10 @@ void OP_Fx29(struct Chip8 *chip);
 void OP_Fx33(struct Chip8 *chip);
 void OP_Fx55(struct Chip8 *chip);
 void OP_Fx65(struct Chip8 *chip);
+
+void opcode_prefix0(struct Chip8 *chip);
+void opcode_prefix8(struct Chip8 *chip);
+void opcode_prefixE(struct Chip8 *chip);
+void opcode_prefixF(struct Chip8 *chip);
 
 #endif /*CHIP8_H*/
