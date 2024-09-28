@@ -2,11 +2,15 @@
 #define CHIP8_H
 
 #include <stdint.h>
-static const unsigned int START_ADDRESS = 0x200;
-static const unsigned int FONTSET_START_ADDRESS = 0x50;
 
-static const uint8_t VIDEO_WIDTH = 64;
-static const uint8_t VIDEO_HEIGHT = 32;
+// initialised in src/chip8.c
+extern const unsigned int START_ADDRESS;
+extern const unsigned int FONTSET_START_ADDRESS;
+
+// initialised in src/chip8.c
+extern const uint8_t VIDEO_WIDTH;
+extern const uint8_t VIDEO_HEIGHT;
+extern const uint8_t CHIP8_KEYMAP[16];
 
 struct Chip8;
 typedef void (*chip8_ins)(struct Chip8 *);
