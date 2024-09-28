@@ -13,12 +13,12 @@ struct Platform
     SDL_Texture *texture;
 };
 
-void init_platform(struct Platform *platform, char const *title, int window_width, int window_height, int texture_width,
+void platform_init(struct Platform *platform, char const *title, int window_width, int window_height, int texture_width,
                    int texture_height);
 
 void update_window(struct Platform *platform, void const *buffer, int pitch);
 char process_input(struct Platform *platform, uint8_t *keys);
 
-void destroy_platform(struct Platform *platform);
+void platform_destroy(struct Platform *platform);
 
 #endif // PLATFORM_H

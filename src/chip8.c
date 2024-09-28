@@ -113,7 +113,7 @@ void chip8_init(struct Chip8 *chip)
     }
 }
 
-void chip8_load_rom(struct Chip8 *chip, const char *filename)
+void chip8_load_rom(struct Chip8 *chip, char const *filename)
 {
     FILE *rom = fopen(filename, "r");
 
@@ -142,22 +142,30 @@ void chip8_load_rom(struct Chip8 *chip, const char *filename)
         i++;
     }
     // removing last byte of the file as it is "end of line" character
-    chip->memory[START_ADDRESS + i - 1] = '\0';
+    chip->memory[START_ADDRESS + i] = 0xFEu;
+    chip->memory[START_ADDRESS + i + 1] = 0xEFu;
 
     fclose(rom);
+
+    fflush(stdout);
 }
 
 void chip8_cycle(struct Chip8 *chip)
 {
 
     // fetch
-    uint16_t instruction = (chip->memory[chip->pc] << 8u) | chip->memory[chip->pc + 1];
+    chip->opcode = (chip->memory[chip->pc] << 8u) | chip->memory[chip->pc + 1];
 
     // move pc to next instruction
     chip->pc += 2;
 
+    if (chip->opcode == 0xFEEFu)
+    {
+        chip->pc -= 2;
+    }
+    printf("current instruction: %x\n", chip->opcode);
     // execute
-    (*chip->table[(instruction & 0xF000u) >> 12u])(chip);
+    (*chip->table[(chip->opcode & 0xF000u) >> 12u])(chip);
 
     // decrement delay timer if it has been set
     if (chip->delay_timer > 0)
