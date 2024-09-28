@@ -7,6 +7,18 @@
 #include "chip8.h"
 #include "fonts.h"
 
+const unsigned int START_ADDRESS = 0x200;
+const unsigned int FONTSET_START_ADDRESS = 0x50;
+
+const uint8_t VIDEO_WIDTH = 64;
+const uint8_t VIDEO_HEIGHT = 32;
+
+// extern'ed in include/chip8.h
+const uint8_t CHIP8_KEYMAP[16] = {'x', '1', '2', '3', 'q', 'w', 'e', 'a', 's', 'd', 'z', 'c', '4', 'r', 'f', 'v'};
+
+// extern'ed in src/platform.c
+uint8_t KEYPAD_MAP[128];
+
 void chip8_init(struct Chip8 *chip)
 {
     memset(&chip->registers, 0, sizeof(chip->registers));
@@ -89,6 +101,16 @@ void chip8_init(struct Chip8 *chip)
     chip->tableF[0x33] = &OP_Fx33;
     chip->tableF[0x55] = &OP_Fx55;
     chip->tableF[0x65] = &OP_Fx65;
+
+    // initializing map of keypad with keyboard
+    for (uint8_t i = 0; i < 128; i++)
+    {
+        KEYPAD_MAP[i] = -1;
+    }
+    for (uint8_t i = 0; i < 16; i++)
+    {
+        KEYPAD_MAP[CHIP8_KEYMAP[i]] = i;
+    }
 }
 
 void chip8_load_rom(struct Chip8 *chip, const char *filename)
