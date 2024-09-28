@@ -3,7 +3,7 @@
 
 #include "platform.h"
 
-void init_platform(struct Platform *platform, char const *title, int window_width, int window_height, int texture_width,
+void platform_init(struct Platform *platform, char const *title, int window_width, int window_height, int texture_width,
                    int texture_height)
 {
 
@@ -15,7 +15,7 @@ void init_platform(struct Platform *platform, char const *title, int window_widt
                                           texture_width, texture_height);
 }
 
-void destroy_platform(struct Platform *platform)
+void platform_destroy(struct Platform *platform)
 {
 
     SDL_DestroyTexture(platform->texture);
@@ -73,4 +73,3 @@ char process_input(struct Platform *platform, uint8_t *keys)
     }
     return quit;
 }
-
